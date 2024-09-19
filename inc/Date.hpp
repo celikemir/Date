@@ -40,6 +40,11 @@ namespace project {
 
 		friend std::ostream& operator<<(std::ostream& os, const Date& date); //31
 		friend std::istream& operator>>(std::istream& is, Date& date); //32
+	
+	private:
+		unsigned int day_;
+		unsigned int month_;
+		unsigned int year_;
 	};
 
 	[[nodiscard]] bool operator<=(const Date&, const Date&); //27
