@@ -77,11 +77,37 @@ namespace project {
 
 		friend std::ostream& operator<<(std::ostream& os, const Date& date)
 		{
-				    os << date.day_ << '/' << date.month_ << '/' << date.year_;
+			os << date.day_ << '/' << date.month_ << '/' << date.year_;
     		return os;
 
 		} //31
-		friend std::istream& operator>>(std::istream& is, Date& date); //32
+
+
+
+
+
+		friend std::istream& operator>>(std::istream& is, Date& date){
+
+		char separator1, separator2;
+
+			// Girdiyi doğrudan parçalamak için: day_, ayırıcı, month_, ayırıcı, year_ şeklinde okuma
+			if (is >> date.day_ >> separator1 >> date.month_ >> separator2 >> date.year_) {
+				// Ayırıcıların doğru olup olmadığını kontrol edelim ('/' olabilir veya başka bir ayırıcı)
+				if (separator1 != '/' || separator2 != '/') {
+					throw std::invalid_argument("Invalid separator format. Use format gg/aa/yyyy");
+				}
+
+				// Geçerli bir tarih olup olmadığını kontrol et
+				if (date.month_ < 1 || date.month_ > 12 || date.day_ < 1 || date.day_ > 31) {
+					throw std::invalid_argument("Invalid date values");
+				}
+			} else {
+				throw std::invalid_argument("Invalid input format. Use format gg/aa/yyyy");
+			}
+
+    return is;
+
+		}; //32
 
 		static const char* to_string(Weekday day) {
         switch (day) {

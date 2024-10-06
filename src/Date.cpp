@@ -274,4 +274,15 @@ int main(){
         std::cout << date3 << " is smaller than " << date4 << std::endl;
     
 
+    Date date8;
+    std::cout << "Tarihi giriniz (gg/aa/yyyy): ";
+    try {
+        std::cin >> date8;
+        Date::Weekday weekday = date8.get_week_day();
+        std::cout << date8 << "\n";
+        std::cout << "Girilen tarih haftanın " << static_cast<int>(weekday) << ". günü." << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << e.what() << std::endl;
+    }
+
 }
