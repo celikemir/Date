@@ -159,23 +159,29 @@ Date& Date::operator+=(int day){
 
 }
 
-Date& Date::operator-=(int day){
-
-    day_ -= day;
-
-    while (day_ < 1) {
-        month_--;
-
-        if (month_ < 1) {
-            month_ = 12;
-            year_--;
-        }
-        day_ += (month_ == 2 && is_leap_year(year_) ? 29 : days_in_month[month_ - 1]);
-    }
-
-    return *this;
-
+Date& Date::operator-=(int day) {
+    return operator+=(-day);
 }
+
+
+
+// Date& Date::operator-=(int day){
+
+//     day_ -= day;
+
+//     while (day_ < 1) {
+//         month_--;
+
+//         if (month_ < 1) {
+//             month_ = 12;
+//             year_--;
+//         }
+//         day_ += (month_ == 2 && is_leap_year(year_) ? 29 : days_in_month[month_ - 1]);
+//     }
+
+//     return *this;
+
+// }
 
 Date& Date::operator++(){
     return *this +=1;
@@ -198,7 +204,24 @@ Date Date::operator--(int){
     return temp;
 }
 
+bool operator<=(const Date& lhs, const Date& rhs) { return !(rhs < lhs); }
+bool operator>(const Date& lhs, const Date& rhs) { return rhs < lhs; }
+bool operator>=(const Date& lhs, const Date& rhs) { return !(lhs < rhs); }
+bool operator!=(const Date& lhs, const Date& rhs) { return !(lhs == rhs); }
 
+
+// global overloadları burada yapınca neden error alıyorum anlamadım yaw  ? 
+
+
+// [[nodiscard]] Date operator+(const Date& date, int n) {
+//     Date result = date;
+//     result += n;
+//     return result;
+// }
+
+// [[nodiscard]] Date operator+(int n, const Date& date){
+//     return date + n;
+// }
 
 int main(){
     // Date mydate;
@@ -232,4 +255,23 @@ int main(){
     Date today(28, 2, 2020); // February 28, 2020 (leap year)
     today += 5;              // Adding 5 days (should move to March 4, 2020)
     std::cout << "New date is: " << today << std::endl;
+
+    Date date3(28, 02, 2023);
+    Date date4(28, 02, 2024);
+
+    int daysBetween = date3 - date4;
+    std::cout << "Days between " << date1 << " and " << date2 << ": " << daysBetween << std::endl;
+
+
+    Date date5 = date1 + 5;  // 5 gün sonrası
+    std::cout << "5 days after " << date1 << " is " << date5 << std::endl;
+
+    Date date6 = 10 + date1;  // 10 gün sonrası
+    std::cout << "10 days after " << date1 << " is " << date6 << std::endl;
+
+
+    if(date3 < date4)
+        std::cout << date3 << " is smaller than " << date4 << std::endl;
+    
+
 }

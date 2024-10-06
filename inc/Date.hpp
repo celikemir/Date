@@ -49,7 +49,8 @@ namespace project {
 		Date operator--(int); //24
 
 		friend bool operator<(const Date& lhs, const Date& rhs){
-						if (lhs.year_ < rhs.year_) {
+			
+			if (lhs.year_ < rhs.year_) {
 				return true;
 			} else if (lhs.year_ == rhs.year_) {
 				if (lhs.month_ < rhs.month_) {
@@ -63,11 +64,10 @@ namespace project {
 
 		friend bool operator==(const Date& lhs, const Date& rhs)
 		{
-			if (lhs.year_ == rhs.year_ && lhs.month_ == rhs.month_ && lhs.day_ == rhs.day_) {
+			if (lhs.year_ == rhs.year_ && lhs.month_ == rhs.month_ && lhs.day_ == rhs.day_)
 				return true;
-			} 
-			
-			return false;
+			else			
+				return false;
 		}; //27
 
 		[[nodiscard]] static Date random_date(); //25
@@ -103,15 +103,45 @@ namespace project {
 		unsigned int year_;
 	};
 
-	[[nodiscard]] bool operator<=(const Date&, const Date&); //27
-	[[nodiscard]] bool operator>(const Date&, const Date&); //27
-	[[nodiscard]] bool operator>=(const Date&, const Date&); //27
-	[[nodiscard]] bool operator!=(const Date&, const Date&); //27
+	[[nodiscard]] bool operator<=(const Date& , const Date& );//{
+	//	return (lhs - rhs) <= 0;
+	// } //27
+	[[nodiscard]] bool operator>(const Date& , const Date& );//{
+	//	 return (lhs - rhs) > 0;
+	//} //27
+	[[nodiscard]] bool operator>=(const Date& , const Date& );//{
+	//		return (lhs - rhs) >= 0;
+	//} //27
+	[[nodiscard]] bool operator!=(const Date& , const Date& );//{
+	//		return !(lhs == rhs);
+	//} //27
 
-	[[nodiscard]] int operator-(const Date& d1, const Date& d2); //28
-	[[nodiscard]] Date operator+(const Date& date, int n); //29
-	[[nodiscard]] Date operator+(int n, const Date&); //29
-	
+	[[nodiscard]] int operator-(const Date& d1, const Date& d2){
+		
+    auto date_to_days = [](const Date& d) {
+        int y = d.get_year();
+        int days = d.get_year_day();  // Days in the current year
+
+       	days += y / 4 - y / 100 + y / 400; // isleap i kullanamadım burada anlamadım func çagrısı yapamıyorum.
+
+        return days;
+    };
+    int days1 = date_to_days(d1);
+    int days2 = date_to_days(d2);
+
+    return days1 - days2;
+	} //28
+
+	[[nodiscard]] Date operator+(const Date& date, int n) {
+		Date result = date; // Tarihi kopyala
+		result += n;        // n gün ekle (+= operatörünü zaten implement ettik)
+		return result;      // Sonucu döndür
+	}
+
+	[[nodiscard]] Date operator+(int n, const Date& date) {
+		return date + n;
+	}
+
 	Date::Weekday& operator++(Date::Weekday& r); //30
 	Date::Weekday operator++(Date::Weekday& r, int); //30
 	Date::Weekday& operator--(Date::Weekday& r); //30
