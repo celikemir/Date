@@ -1,6 +1,8 @@
 #include <Date.hpp>
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <random>
 
 using namespace project;
 
@@ -35,6 +37,10 @@ int Date::get_year()const{
 
 constexpr bool Date::is_leap_year(int const year)const{
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+constexpr bool Date::isleap(int y){
+    return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
 }
 
 int Date::get_year_day()const{
@@ -92,6 +98,35 @@ Date& Date::set(int day, int mon, int year){
     month_ = mon;
     year_ = year;
 
+}
+// neden static üye fonksiyon içinde non static bir üye fonksiyonu sınıfı instantiate etmeden çagıramıyorum.
+Date Date::random_date(){
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::default_random_engine generator(seed);
+
+        // Yıl için dağılım (örneğin, 1900-2100 arası)
+        std::uniform_int_distribution<int> year_dist(1900, 2100);
+        unsigned int year = year_dist(generator);
+
+        // Ay için dağılım
+        std::uniform_int_distribution<int> month_dist(1, 12);
+        unsigned int month = month_dist(generator);
+
+        // Gün için maksimum değeri belirle
+        int max_day;
+        if (month == 2) {
+            max_day = isleap(year) ? 29 : 28;
+        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+            max_day = 30;
+        } else {
+            max_day = 31;
+        }
+
+        // Gün için dağılım
+        std::uniform_int_distribution<int> day_dist(1, max_day);
+        int day = day_dist(generator);
+
+        return Date(day, month, year);
 }
 
 [[nodiscard]] Date Date::operator-(int days)const{
@@ -273,6 +308,15 @@ int main(){
     if(date3 < date4)
         std::cout << date3 << " is smaller than " << date4 << std::endl;
     
+        std::cout << "Testing random_date() function:\n";
+    
+    // 10 rastgele tarih oluştur ve yazdır
+    for (int i = 0; i < 10; ++i) {
+        Date random_date = Date::random_date();
+        std::cout << "Random date " << i + 1 << ": " << random_date << std::endl;
+    }
+
+
 
     Date date8;
     std::cout << "Tarihi giriniz (gg/aa/yyyy): ";

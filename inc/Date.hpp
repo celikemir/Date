@@ -82,9 +82,22 @@ namespace project {
 
 		} //31
 
+		// Weekday get_week_day() const {
+        // 	return calculate_week_day(day_, month_, year_);
+    	// }
 
-
-
+    	// static Weekday calculate_week_day(int day, int month, int year) {
+		// 	// Sakamuto Algoritması
+		// 	if (month < 3) {
+		// 		month += 12;
+		// 		year -= 1;
+		// 	}
+		// 	int K = year % 100;
+		// 	int J = year / 100;
+		// 	int f = day + (13 * (month + 1)) / 5 + K + K / 4 + J / 4 + 5 * J;
+		// 	int weekday = f % 7;
+        // return static_cast<Weekday>((weekday + 5) % 7); // Haftanın günü 0: Sunday, 6: Saturday
+    	// }
 
 		friend std::istream& operator>>(std::istream& is, Date& date){
 
@@ -96,11 +109,27 @@ namespace project {
 				if (separator1 != '/' || separator2 != '/') {
 					throw std::invalid_argument("Invalid separator format. Use format gg/aa/yyyy");
 				}
-
-				// Geçerli bir tarih olup olmadığını kontrol et
-				if (date.month_ < 1 || date.month_ > 12 || date.day_ < 1 || date.day_ > 31) {
-					throw std::invalid_argument("Invalid date values");
+			if (date.year_ < year_base ) {
+					throw std::invalid_argument("Invalid year value");
 				}
+
+			if (date.month_ < 1 || date.month_ > 12) {
+					throw std::invalid_argument("Invalid month value");
+				}
+        
+			// Ayın maksimum gün sayısını hesapla
+			int maxDays;
+			if (date.month_ == 2) { // Şubat ayı için
+				maxDays = date.is_leap_year(date.year_) ? 29 : 28;
+			} else if (date.month_ == 4 || date.month_ == 6 || date.month_ == 9 || date.month_ == 11) {
+				maxDays = 30;
+			} else {
+				maxDays = 31;
+			}
+			
+			if (date.day_ < 1 || date.day_ > maxDays) {
+				throw std::invalid_argument("Invalid day value for the given month");
+			}
 			} else {
 				throw std::invalid_argument("Invalid input format. Use format gg/aa/yyyy");
 			}
